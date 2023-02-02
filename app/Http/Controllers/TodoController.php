@@ -14,10 +14,39 @@ class TodoController extends Controller
         return view('index', ['todos' => $todos]);
     }
 
-    public function create(TodoRequest $request)
+    public function created(TodoRequest $request)
     {
-        $form =$request->all();
+        $form = $request->all();
         Todo::create($form);
+        return redirect('/');
+    }
+
+    public function store(Request $request)
+    {
+        $todo = new todo;
+        $todo->content = $request->input('content');
+        $todo->save();
+        return redirect('/');
+    }
+
+    public function edit(Request $request)
+    {
+        $todo = Todo::find($rewuest->id);
+        return view('edit', ['form' => $todo]);
+    }
+
+    public function update(TodoRequest $request)
+    {
+        $form = $request->all();
+        unset($form['_token']);
+        Todo::where('id', $request->id)->update($form);
+        return redirect('/');
+    }
+
+    public function delete(Request $request)
+    {
+        $form = $request->all();
+        Todo::where('id', $request->id)->delete($form);
         return redirect('/');
     }
 }

@@ -305,10 +305,14 @@
   <div class="container">
     <div class="card">
       <p class="title mb-15">Todo List</p>
-            <div class="todo">
-        <form action="/index.blade.php" method="post" class="flex between mb-30">
-          <input type="hidden" name="_token" value="">          <input type="text" class="input-add" name="content" />
-          <input class="" type="submit" value="追加" />
+      <div class="todo">
+        @if(count($errors) > 0)
+        <p>・入力に問題があります</p>
+        @endif
+        <form action="/store" method="POST" class="flex between mb-30">
+          @csrf
+          <input type="text" class="input-add" name="content" />
+          <input class="button-add" type="submit" value="追加" />
         </form>
         <table>
           <tr>
@@ -317,10 +321,25 @@
             <th>更新</th>
             <th>削除</th>
           </tr>
-                  </table>
+          @foreach ($todos as $todo)
+          <tr>
+            <td>{{$todo->created_at}}</td>
+            <form action="/update" method="POST">
+            @csrf
+            <input type="hidden" name="id" value="{{$todo->id}}">
+            <td><input type="text" class="input-update" name="content" value="{{$todo->content}}"></td>
+            <td><button class="button-update">更新</button></td>
+            </form>
+            <form action="/delete" method="POST">
+            @csrf
+            <input type="hidden" name="id" value="{{$todo->id}}">
+            <td><button class="button-delete">削除</button></td>
+            </form>
+          </tr>
+          @endforeach
+        </table>
       </div>
     </div>
-  </div>
   </div>
 </body>
 </html>
