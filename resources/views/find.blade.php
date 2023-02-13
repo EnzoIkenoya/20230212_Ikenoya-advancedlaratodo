@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="csrf-token" content="FOdCR23OnwItS2p0svqJRdTpLqIDKt5veNZOqET7">
+  <meta name="csrf-token" content="jmorlM1laxfvO1V01GBsm4aELCvDEjJNTUFZpjsT">
   <title>COACHTECH</title>
   <style>
     html,
@@ -353,7 +353,7 @@ tr {
   <div class="container">
     <div class="card">
       <div class="card__header">
-  <p class="title mb-15">Todo List</p>
+  <p class="title mb-15">タスク検索</p>
   <div class="auth mb-15">
     <p class="detail">「{{$user->name}}」でログイン中</p>
     <form method="post" action="/logout">
@@ -362,19 +362,19 @@ tr {
     </form>
   </div>
 </div>
-<a class="btn btn-search" href="/find">タスク検索</a>
 <div class="todo">
-  <form action="/store" method="post" class="flex between mb-30">
+  <form action="search" method="get" class="flex between mb-30">
   @csrf
-    <input type="text" class="input-add" name="content" />
+    <input type="text" class="input-add" name="content">
     <select name="tag_id" class="select-tag">
-      <option value="1">家事</option>
-      <option value="2">勉強</option>
-      <option value="3">運動</option>
-      <option value="4">食事</option>
-      <option value="5">移動</option>
-    </select>
-    <input class="btn btn-add" type="submit" value="追加" />
+      <option disabled selected value></option>
+            <option value="1">家事</option>
+            <option value="2">勉強</option>
+            <option value="3">運動</option>
+            <option value="4">食事</option>
+            <option value="5">移動</option>
+          </select>
+    <input class="btn btn-add" type="submit" value="検索" />
   </form>
   <table>
     <tr>
@@ -384,41 +384,12 @@ tr {
       <th>更新</th>
       <th>削除</th>
     </tr>
-    @foreach($todos as $todo)
-    <tr>
-      <td>
-        {{$todo->created_at}}
-      </td>
-      <form action="/update" method="post">
-      @csrf
-        <input type="hidden" name="id" value="{{$todo->id}}">
-        <td>
-          <input type="text" class="input-update" value="{{$todo->content}}" name="content">
-        </td>
-        <td>
-          <select name="tag_id" class="select-tag">
-            <option  value="1">家事</option>
-            <option  value="2">勉強</option>
-            <option  value="3">運動</option>
-            <option  value="4">食事</option>
-            <option  value="5">移動</option>
-          </select>
-        </td>
-        <td>
-          <button class="btn btn-update">更新</button>
-        </td>
-      </form>
-      <td>
-        <form action="/delete" method="post">
-        @csrf
-          <input type="hidden" name="id">
-          <button class="btn btn-delete">削除</button>
-        </form>
-      </td>
-    </tr>
-    @endforeach
+  </table>
+  <table>
+    
   </table>
 </div>
+<a class="btn btn-back" href="http://54.65.181.123/todo-advance">戻る</a>
     </div>
   </div>
 </body>

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,11 +13,20 @@ use App\Http\Controllers\TodoController;
 |
 */
 
-Route::get('/', [TodoController::class,'index']);
-Route::post('/store', [TodoController::class, 'store']);
-Route::get('/create', [TodoController::class, 'create']);
-Route::post('/create', [TodoController::class, 'created']);
-Route::get('/update', [TodoController::class, 'update']);
-Route::post('/update', [TodoController::class, 'update']);
-Route::get('/delete',[TodoController::class, 'delete']);
-Route::post('/delete',[TodoController::class, 'delete']);
+Route::get('/', [TodoController::class,'index'])->middleware('auth');
+Route::get('/index', [TodoController::class,'index'])->middleware('auth');
+Route::post('/store', [TodoController::class, 'store'])->middleware('auth');
+Route::get('/create', [TodoController::class, 'create'])->middleware('auth');
+Route::post('/create', [TodoController::class, 'created'])->middleware('auth');
+Route::get('/update', [TodoController::class, 'update'])->middleware('auth');
+Route::post('/update', [TodoController::class, 'update'])->middleware('auth');
+Route::get('/delete',[TodoController::class, 'delete'])->middleware('auth');
+Route::post('/delete',[TodoController::class, 'delete'])->middleware('auth');
+Route::get('find',[TodoController::class, 'find'])->middleware('auth');
+Route::get('search', [TodoController::class, 'search'])->middleware('auth');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
