@@ -14,9 +14,6 @@ class TodosTableSeeder extends Seeder
      */
     public function run()
     {
-        $param = [
-            'content' => 'リスト'
-        ];
-        Todo::create($param);
+        Todo::factory()->create();
     }
 }

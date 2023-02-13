@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
 {
+    use HasFactory;
+
     public function todos() {
-        return $this->hasMany('App\Models\Todo');
+        return $this->hasMany(Todo::class);
     }
 }

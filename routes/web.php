@@ -13,20 +13,13 @@ use App\Http\Controllers\TodoController;
 |
 */
 
-Route::get('/', [TodoController::class,'index'])->middleware('auth');
-Route::get('/index', [TodoController::class,'index'])->middleware('auth');
-Route::post('/store', [TodoController::class, 'store'])->middleware('auth');
-Route::get('/create', [TodoController::class, 'create'])->middleware('auth');
-Route::post('/create', [TodoController::class, 'created'])->middleware('auth');
-Route::get('/update', [TodoController::class, 'update'])->middleware('auth');
-Route::post('/update', [TodoController::class, 'update'])->middleware('auth');
-Route::get('/delete',[TodoController::class, 'delete'])->middleware('auth');
-Route::post('/delete',[TodoController::class, 'delete'])->middleware('auth');
-Route::get('find',[TodoController::class, 'find'])->middleware('auth');
-Route::get('search', [TodoController::class, 'search'])->middleware('auth');
+Route::group(['middleware' =>['auth']], function () {
+    Route::get('/',[TodoController::class,'index'])->name('todo.index');
+    Route::post('/todo/create', [TodoController::class, 'create'])->name('todo.create');
+    Route::post('/todo/update', [TodoController::class, 'update'])->name('todo.update');
+    Route::post('/todo/delete', [TodoController::class, 'delete'])->name('todo.delete');
+    Route::get('/todo/find', [TodoController::class, 'find'])->name('todo.find');
+    Route::get('/todo/search', [TodoController::class, 'search'])->name('todo.search');
+});
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -2,16 +2,15 @@
 
 @section('content')
 <div class="card__header">
-  <p class="title mb-15">Todo List</p>
+  <p class="title mb-15">タスク検索</p>
   <div class="auth mb-15">
     <p class="detail">「{{ $user->name }}」でログイン中</p>
-    <form method="post" action="/logout">
+    <form method="post" action="{{ route('logout') }}">
       @csrf
       <input class="btn btn-logout" type="submit" value="ログアウト">
     </form>
   </div>
 </div>
-<a class="btn btn-search" href="{{ route('todo.find') }}">タスク検索</a>
 @if (count($errors) > 0)
 <ul>
   @foreach ($errors->all() as $error)
@@ -20,15 +19,16 @@
 </ul>
 @endif
 <div class="todo">
-  <form action="{{ route('todo.create') }}" method="post" class="flex between mb-30">
+  <form action="/todo/search" method="get" class="flex between mb-30">
     @csrf
     <input type="text" class="input-add" name="content" />
     <select name="tag_id" class="select-tag">
+      <option disabled selected value></option>
       @foreach($tags as $tag)
       <option value="{{ $tag->id }}">{{ $tag->name }}</option>
       @endforeach
     </select>
-    <input class="btn btn-add" type="submit" value="追加" />
+    <input class="btn btn-add" type="submit" value="検索" />
   </form>
   <table>
     <tr>
@@ -56,6 +56,7 @@
           </select>
         </td>
         <td>
+
           <button class="btn btn-update">更新</button>
         </td>
       </form>
@@ -69,4 +70,5 @@
     @endforeach
   </table>
 </div>
+<a class="btn btn-back" href="{{ route('todo.index') }}">戻る</a>
 @endsection

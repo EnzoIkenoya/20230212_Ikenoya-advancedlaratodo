@@ -2,72 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Todo;
 use Illuminate\Http\Request;
-use App\Http\Requests\TodoRequest;
+use App\Models\Todo;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\TodoRequest;
 
 class TodoController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $todos = Todo::all();
-        return view('index', ['todos' => $todos , 'user'=>$user]);
+        $tags = Tag::all();
+        $todos = $user->todos;
+        return view('index', ['todos' => $todos , 'user'=>$user, 'tags'=>$tags]);
     }
 
-    public function created(TodoRequest $request)
+    public function create(TodoRequest $request)
     {
-        $form = $request->all();
-        Todo::create($form);
-        return redirect('/');
-    }
-
-    public function store(Request $request)
-    {
-        $todo = new todo;
-        $todo->content = $request->input('content');
-        $todo->save();
-        return redirect('/');
-    }
-
-    public function edit(Request $request)
-    {
-        $todo = Todo::find($rewuest->id);
-        return view('edit', ['form' => $todo]);
+        $todo = new Todo;
+        $form = $this->unsetToken($request);
+        $form['user_id'] = Auth::id();
+        $todo->fill($form)->save();
+        return back();
     }
 
     public function update(TodoRequest $request)
     {
-        $form = $request->all();
-        unset($form['_token']);
-        Todo::where('id', $request->id)->update($form);
-        return redirect('/');
+        $user = Auth::user();
+        $todo = Todo::find($request->id);
+        if($todo->user->id !== $user->id) return back();
+        $form = $this->unsetToken($request);
+        $todo->fill($form)->save();
+        return back();
     }
 
     public function delete(Request $request)
     {
-        $form = $request->all();
-        Todo::where('id', $request->id)->delete($form);
-        return redirect('/');
+        $user = Auth::user();
+        $todo = Todo::find($request->id);
+        if($todo->user_id !== $user->id) return back();
+        $todo->delete();
+        return back();
     }
 
-    public function find(Request $request)
+    public function find()
     {
         $user = Auth::user();
-        $form = $request->all();
-        return view('/find', ['user'=>$user]);
+        $tags = Tag::all();
+        $todos = [];
+        return view('search', ['todos' => $todos, 'user' => $user, 'tags' => $tags]);
     }
 
     public function search(Request $request)
     {
         $user = Auth::user();
-        $todos = 'todos';
-        $todo = Todo::where('content','LIKE BINARY',"%{$request->input}%")->first();
-        $param = [
-            'input' => $request->input,
-            'todo' =>$todo,
-        ];
-        return view('find',['user'=>$user, $param,]);
+        $tags = Tag::all();
+        $keyword = $request['content'];
+        $tag_id = $request['tag_id'];
+        $todos = Todo::doSearch($keyword, $tag_id);
+        return view('search', ['todos' => $todos, 'user' => $user, 'tags' => $tags]);
+    }
+
+    public function unsetToken($request)
+    {
+        $form = $request->all();
+        unset($form['_token']);
+        return $form;
     }
 }

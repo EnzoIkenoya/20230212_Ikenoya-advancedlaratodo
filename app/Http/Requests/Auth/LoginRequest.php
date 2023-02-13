@@ -33,6 +33,16 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string'],
         ];
     }
+    public function messages()
+    {
+        return [
+            "email.required" => "メールアドレスを入力してください。",
+            "email.email" => "メールアドレスの形式で入力してください。",
+            "password.required" => "パスワードを入力してください。",
+            "password.min" => "8文字以上で入力してください。",
+            "password.max" => "191文字以下で入力してください。"
+        ];
+    }
 
     /**
      * Attempt to authenticate the request's credentials.
